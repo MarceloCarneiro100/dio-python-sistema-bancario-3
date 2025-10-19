@@ -1,0 +1,90 @@
+@startuml
+title Diagrama UML - Sistema Bancário 
+
+' ===========================
+' Classes principais
+' ===========================
+class Cliente {
+    + endereco : str
+    + contas : list
+    + realizar_transacao(conta : Conta, transacao : Transacao) : void
+    + adicionar_conta(conta : Conta) : void
+}
+
+class PessoaFisica {
+    + nome : str
+    + data_nascimento : str
+    + cpf : str
+    + __str__() : str
+}
+
+Cliente <|-- PessoaFisica
+
+class Conta {
+    - _saldo : float
+    - _numero : int
+    - _agencia : str
+    - _cliente : Cliente
+    - _historico : Historico
+
+    + nova_conta(cliente : Cliente, numero : int) : Conta
+    + saldo : float {property}
+    + numero : int {property}
+    + agencia : str {property}
+    + cliente : Cliente {property}
+    + historico : Historico {property}
+    + sacar(valor : float) : bool
+    + depositar(valor : float) : bool
+}
+
+class ContaCorrente {
+    + limite : float
+    + limite_saques : int
+    + sacar(valor : float) : bool
+    + __str__() : str
+}
+
+Conta <|-- ContaCorrente
+
+class Historico {
+    - _transacoes : list
+    + transacoes : list {property}
+    + adicionar_transacao(transacao : Transacao) : void
+}
+
+abstract class Transacao {
+    {abstract} + valor : float
+    {abstract} + registrar(conta : Conta) : void
+}
+
+class Saque {
+    - _valor : float
+    + valor : float {property}
+    + registrar(conta : Conta) : void
+}
+
+class Deposito {
+    - _valor : float
+    + valor : float {property}
+    + registrar(conta : Conta) : void
+}
+
+Transacao <|-- Saque
+Transacao <|-- Deposito
+
+' ===========================
+' Relacionamentos com cardinalidade e tipo
+' ===========================
+
+' Cliente possui várias contas (agregação)
+Cliente "1" o-- "*" Conta : possui >
+
+' Conta tem 1 histórico (composição forte)
+Conta "1" *-- "1" Historico : possui >
+
+' Histórico contém várias transações (agregação)
+Historico "1" o-- "*" Transacao : contém >
+
+' Transação atua sobre uma conta (associação funcional)
+Transacao --> Conta : registra em >
+@enduml

@@ -43,6 +43,11 @@ Este projeto é um sistema bancário simples desenvolvido em Python, com foco em
 
 ---
 
+
+## 📊 Diagrama UML do Sistema
+![Diagrama UML do Sistema Bancário](docs/diagrama-uml.png)
+
+
 ## 🛡️ Tratamento de exceções
 
 - Conversões de entrada (`float`, `int`) protegidas com `try/except`
